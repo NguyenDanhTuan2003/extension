@@ -1,0 +1,98 @@
+services:
+  # ─────────────────────────────────────────
+  # INFRASTRUCTURE
+  # ─────────────────────────────────────────
+
+  mongo:
+    image: mongo:7-jammy
+    container_name: notice_mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: extention
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: notice_redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  nats:
+    image: nats:2-alpine
+    container_name: notice_nats
+    restart: always
+    ports:
+      - "4222:4222"
+      - "8222:8222"
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8222/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ─────────────────────────────────────────
+  # APPLICATIONS
+  # ─────────────────────────────────────────
+
+  api-gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: api-gateway       # Dùng stage api-gateway trong Dockerfile
+    container_name: notice_api_gateway
+    restart: always
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env.docker             # File env riêng cho Docker (host → container name)
+    depends_on:
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      nats:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:3000/notice"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+  notice-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: notice-service    # Dùng stage notice-service trong Dockerfile
+    container_name: notice_service
+    restart: always
+    env_file:
+      - .env.docker
+    depends_on:
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      nats:
+        condition: service_healthy
+
+volumes:
+  mongo_data:
+    driver: local
+  redis_data:
+    driver: local
