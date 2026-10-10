@@ -1,0 +1,40 @@
+{
+  "manifest_version": 3,
+  "name": "Thông Báo Sinh Viên",
+  "version": "1.0.0",
+  "description": "Đồng bộ và xem thông báo từ cổng sinh viên",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.edu.vn/*", "*://sv.hust.edu.vn/*", "*://ctt-sis.hust.edu.vn/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "permissions": ["storage", "activeTab", "scripting", "tabs"],
+  "host_permissions": [
+    "*://*.edu.vn/*",
+    "http://localhost:3000/*",
+    "http://127.0.0.1:3000/*"
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["popup/popup.css", "popup/popup.html", "inject.js"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

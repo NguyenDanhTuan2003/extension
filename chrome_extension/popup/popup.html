@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thông Báo Sinh Viên</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <!-- ═══ HEADER ═══ -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo-icon" aria-hidden="true">TB</div>
+      <div>
+        <h1 class="header-title">Thông Báo SV</h1>
+        <p class="header-sub" id="loginStatus">Đang kiểm tra...</p>
+      </div>
+    </div>
+    <button class="btn-sync" id="btnSync" disabled>
+      <span class="btn-icon" aria-hidden="true">↻</span>
+      <span class="btn-text">Làm mới</span>
+    </button>
+  </header>
+
+  <!-- ═══ PROGRESS BAR ═══ -->
+  <div class="progress-wrap" id="progressWrap" style="display:none">
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <p class="progress-msg" id="progressMsg">Đang xử lý...</p>
+  </div>
+
+  <!-- ═══ TOAST ═══ -->
+  <div class="toast" id="toast"></div>
+
+  <!-- ═══ FILTER BAR ═══ -->
+  <section class="filter-section">
+    <!-- Tìm kiếm -->
+    <div class="search-wrap">
+      <span class="search-icon" aria-hidden="true">⌕</span>
+      <input
+        type="text"
+        class="search-input"
+        id="searchInput"
+        placeholder="Tìm kiếm thông báo..."
+      />
+    </div>
+
+    <!-- Filter chips -->
+    <div class="filter-row">
+      <!-- Chuyên mục -->
+      <div class="filter-group">
+        <label class="filter-label">Chuyên mục</label>
+        <div class="chip-group" id="chuyenMucChips">
+          <button class="chip chip-active" data-value="">Tất cả</button>
+          <button class="chip" data-value="daotao">Đào tạo</button>
+          <button class="chip" data-value="nhatruong">Nhà trường</button>
+          <button class="chip" data-value="hoatdongsv">Hoạt động SV</button>
+        </div>
+      </div>
+
+      <!-- Khóa -->
+      <div class="filter-group">
+        <label class="filter-label">Khóa áp dụng</label>
+        <div class="chip-group" id="khoaChips">
+          <button class="chip chip-active" data-value="">Tất cả khóa</button>
+          <!-- Sẽ load dynamic từ API -->
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <label class="filter-label">Khoa đào tạo</label>
+        <div class="chip-group" id="khoaDaoTaoChips">
+          <button class="chip chip-active" data-value="">Tất cả khoa</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ NOTICE LIST ═══ -->
+  <main class="notice-list" id="noticeList">
+    <div class="skeleton-wrap" id="skeletonWrap">
+      <div class="skeleton-card"></div>
+      <div class="skeleton-card"></div>
+      <div class="skeleton-card"></div>
+    </div>
+  </main>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer class="footer">
+    <span id="footerCount">—</span>
+    <div class="pagination" aria-label="Phân trang">
+      <button class="page-btn" id="prevPage" type="button" aria-label="Trang trước">‹</button>
+      <span class="page-label" id="pageLabel">1 / 1</span>
+      <button class="page-btn" id="nextPage" type="button" aria-label="Trang sau">›</button>
+    </div>
+  </footer>
+
+  <script src="popup.js"></script>
+</body>
+</html>
